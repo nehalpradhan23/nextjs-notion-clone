@@ -5,17 +5,19 @@ import { ChevronsLeft, MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import UserItem from "./user-item";
 
 const Navigation = () => {
   const pathname = usePathname(); // close sidebar after click
-  const isMobile = useMediaQuery("(max-width: 768px");
+  const isMobile = useMediaQuery("(max-width: 768px"); // check screen size if mobile
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  const [isCollapsed, setIsCollapsed] = useState(isMobile); // small screen or not
 
+  // close sidebar for small screen or open if made bigger
   useEffect(() => {
     if (isMobile) {
       collapse();
@@ -24,12 +26,14 @@ const Navigation = () => {
     }
   }, [isMobile]);
 
+  // close sidebar if path changed and is on mobile screen
   useEffect(() => {
     if (isMobile) {
       collapse();
     }
   }, [pathname, isMobile]);
 
+  // when mouse is hold down ======================
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -40,10 +44,11 @@ const Navigation = () => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
-  // =======================================================
+  // when mouse is moved while holding =======================================================
   const handleMouseMove = (event: MouseEvent) => {
     if (!isResizingRef.current) return;
-    let newWidth = event.clientX;
+    let newWidth = event.clientX; // get width with current mouse coordinate
+
     // limit for resizing
     if (newWidth < 240) newWidth = 240;
     if (newWidth > 480) newWidth = 480;
@@ -55,7 +60,7 @@ const Navigation = () => {
       navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px`);
     }
   };
-  // =======================================================
+  // when mouse is stopped pressing =======================================================
   const handleMouseUp = () => {
     isResizingRef.current = false;
     document.removeEventListener("mousemove", handleMouseMove);
@@ -109,7 +114,7 @@ const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <div className="">
-          <p>Action items</p>
+          <UserItem />
         </div>
         <div className="mt-4">
           <p>Documents</p>
