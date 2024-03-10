@@ -1,15 +1,29 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import UserItem from "./user-item";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import Item from "./item";
+import { toast } from "sonner";
 
 const Navigation = () => {
   const pathname = usePathname(); // close sidebar after click
   const isMobile = useMediaQuery("(max-width: 768px"); // check screen size if mobile
+
+  const documents = useQuery(api.documents.get);
+
+  const create = useMutation(api.documents.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -91,6 +105,16 @@ const Navigation = () => {
       setTimeout(() => setIsResetting(false), 300);
     }
   };
+
+  // =======================================================
+  const handleCreate = () => {
+    const promise = create({ title: "Untitled" });
+    toast.promise(promise, {
+      loading: "Creating your note...",
+      success: "New note created",
+      error: "Failed to create your note",
+    });
+  };
   // =======================================================
   return (
     <>
@@ -113,11 +137,21 @@ const Navigation = () => {
         >
           <ChevronsLeft className="h-6 w-6" />
         </div>
+        {/* user information, dropdown menu =========================== */}
         <div className="">
           <UserItem />
+          {/* search bar =================== */}
+          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          {/* settings button  */}
+          <Item label="Settings" icon={Settings} onClick={() => {}} />
+          {/* create note button =========================================== */}
+          <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         </div>
+        {/* documents list ======================================= */}
         <div className="mt-4">
-          <p>Documents</p>
+          {documents?.map((document) => (
+            <p key={document._id}>{document.title}</p>
+          ))}
         </div>
         {/* sidebar resize border ======================================= */}
         <div
