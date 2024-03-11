@@ -47,12 +47,12 @@ export const SearchCommand = () => {
     onClose();
   };
 
-  if (!isMounted) return null;
+  if (!isMounted) return null; // to avoid hydration error
 
   // =========================================================
   return (
     <CommandDialog open={isOpen} onOpenChange={onClose}>
-      <CommandInput placeholder={`Search${user?.fullName}'s Clotion`} />
+      <CommandInput placeholder={`Search ${user?.fullName}'s Clotion`} />
       <CommandList>
         <CommandEmpty>No results found</CommandEmpty>
         <CommandGroup heading="Documents">
