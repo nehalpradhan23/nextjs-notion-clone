@@ -25,6 +25,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import TrashBox from "./trash-box";
+import { useSearch } from "@/hooks/use-search";
 
 const Navigation = () => {
   const pathname = usePathname(); // close sidebar after click
@@ -37,6 +38,7 @@ const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile); // small screen or not
+  const search = useSearch();
 
   // close sidebar for small screen or open if made bigger
   useEffect(() => {
@@ -148,7 +150,7 @@ const Navigation = () => {
         <div className="">
           <UserItem />
           {/* search bar =================== */}
-          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
           {/* settings button  */}
           <Item label="Settings" icon={Settings} onClick={() => {}} />
           {/* create note button =========================================== */}
