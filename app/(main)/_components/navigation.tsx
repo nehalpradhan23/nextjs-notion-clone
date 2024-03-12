@@ -31,7 +31,7 @@ import Navbar from "./navbar";
 
 const Navigation = () => {
   const pathname = usePathname(); // close sidebar after click
-  const isMobile = useMediaQuery("(max-width: 768px"); // check screen size if mobile
+  const isMobile = useMediaQuery("(max-width: 768px)"); // check screen size if mobile
 
   const create = useMutation(api.documents.create);
 
@@ -102,12 +102,14 @@ const Navigation = () => {
       sidebarRef.current.style.width = isMobile ? "100%" : "240px";
       navbarRef.current.style.setProperty(
         "width",
-        isMobile ? "0" : "calc(100% -240px)"
+        isMobile ? "0" : "calc(100% - 240px)"
       );
+
       navbarRef.current.style.setProperty("left", isMobile ? "100%" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
   };
+
   // =======================================================
   const collapse = () => {
     if (sidebarRef.current && navbarRef.current) {
