@@ -10,7 +10,7 @@ import {
   Settings,
   Trash,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import UserItem from "./user-item";
@@ -27,6 +27,7 @@ import {
 import TrashBox from "./trash-box";
 import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";
+import Navbar from "./navbar";
 
 const Navigation = () => {
   const pathname = usePathname(); // close sidebar after click
@@ -41,6 +42,8 @@ const Navigation = () => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile); // small screen or not
   const search = useSearch();
   const settings = useSettings();
+
+  const params = useParams();
 
   // close sidebar for small screen or open if made bigger
   useEffect(() => {
@@ -190,16 +193,21 @@ const Navigation = () => {
           isMobile && "left-0 w-full"
         )}
       >
-        {/* open sidebar icon ======================== */}
-        <nav className="bg-transparent px-3 py-2 w-full">
-          {isCollapsed && (
-            <MenuIcon
-              onClick={resetWidth}
-              role="button"
-              className="h-6 w-6 text-muted-foreground"
-            />
-          )}
-        </nav>
+        {/* if viewing a document ========================= */}
+        {!!params.documentId ? (
+          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
+        ) : (
+          // open sidebar icon ========================
+          <nav className="bg-transparent px-3 py-2 w-full">
+            {isCollapsed && (
+              <MenuIcon
+                onClick={resetWidth}
+                role="button"
+                className="h-6 w-6 text-muted-foreground"
+              />
+            )}
+          </nav>
+        )}
       </div>
     </>
   );
