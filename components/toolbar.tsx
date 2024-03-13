@@ -8,6 +8,7 @@ import { ElementRef, useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import TextareaAutosize from "react-textarea-autosize";
+import { useCoverImage } from "@/hooks/use-cover-image";
 
 interface ToolbarProps {
   initialData: Doc<"documents">;
@@ -19,6 +20,8 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const [value, setValue] = useState(initialData.title);
   const update = useMutation(api.documents.update);
   const removeIcon = useMutation(api.documents.removeIcon);
+
+  const coverImage = useCoverImage();
 
   // =========================================
   const enableInput = () => {
@@ -67,13 +70,16 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   // =================================
   return (
     <div className="pl-[54px] group relative">
+      {/* if icon exists and is admin icon is editable ============================== */}
       {!!initialData.icon && !preview && (
+        // show icon and icon picker ============================================
         <div className="flex items-center gap-x-2 group/icon pt-6">
           <IconPicker onChange={onIconSelect}>
             <p className="text-6xl hover:opacity-75 transition">
               {initialData.icon}
             </p>
           </IconPicker>
+          {/* remove icon button ========================== */}
           <Button
             onClick={onRemoveIcon}
             className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
@@ -84,11 +90,13 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           </Button>
         </div>
       )}
+      {/* not editable for viewers ======================================== */}
       {!!initialData.icon && preview && (
         <p className="text-6xl pt-6">{initialData.icon}</p>
       )}
+      {/* if no icon ==================================================== */}
       <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
-        {/* add icon and cover image ================= */}
+        {/* add icon and cover image buttons ============================================= */}
         {!initialData.icon && !preview && (
           <IconPicker asChild onChange={onIconSelect}>
             <Button
@@ -103,7 +111,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
         )}
         {!initialData.coverImage && !preview && (
           <Button
-            onClick={() => {}}
+            onClick={coverImage.onOpen}
             className="text-muted-foreground text-xs"
             variant="outline"
             size="sm"
@@ -114,6 +122,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
         )}
       </div>
 
+      {/* show editable title ================================= */}
       {isEditing && !preview ? (
         <TextareaAutosize
           ref={inputRef}
