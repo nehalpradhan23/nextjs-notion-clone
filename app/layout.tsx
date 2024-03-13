@@ -50,6 +50,7 @@ export default function RootLayout({
               storageKey="clotion-theme"
             >
               <Toaster position="bottom-center" />
+              {/* provider for settings and cover image dialog */}
               <ModalProvider />
               {children}
             </ThemeProvider>

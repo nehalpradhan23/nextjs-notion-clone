@@ -30,9 +30,14 @@ export const CoverImageModal = () => {
     if (file) {
       setIsSubmitting(true);
       setFile(file);
+
       const res = await edgestore.publicFiles.upload({
         file,
+        options: {
+          replaceTargetUrl: coverImage.url,
+        },
       });
+
       await update({
         id: params.documentId as Id<"documents">,
         coverImage: res.url,
@@ -42,6 +47,7 @@ export const CoverImageModal = () => {
   };
   // =================================================
   return (
+    // modal provider ==========================
     <Dialog open={coverImage.isOpen} onOpenChange={coverImage.onClose}>
       <DialogContent>
         <DialogHeader>
