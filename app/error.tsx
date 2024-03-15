@@ -9,8 +9,8 @@ const Error = () => {
     <div className="h-full flex flex-col items-center justify-center space-y-4">
       <Image
         src="/error1.png"
-        height={300}
-        width={300}
+        height={200}
+        width={200}
         alt="Error"
         className=""
       />
